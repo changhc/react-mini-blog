@@ -10,17 +10,21 @@ const keyDown = (event) => {
 		e.preventDefault();
 		e.target.blur();
 	}
-}
+};
+
+const remoteUrl = 'http://localhost:5000';
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			title: 'New Post',
 			editorState: createEditorState(),
 		};
 		this.onChange = this.onChange.bind(this);
 		this.savePost = this.savePost.bind(this);
 		this.discardPost = this.discardPost.bind(this);
+		this.updateTitle = this.updateTitle.bind(this);
 	}
 
 	componentDidMount() {
@@ -35,6 +39,14 @@ class App extends Component {
 		
 	}
 
+	updateTitle(event) {
+		const e = event;
+		if (!e.target.textContent.length) {
+			return;
+		}
+		this.setState({ title: e.target.textContent });
+	}
+
 	keyUp(event) {
 		const e = event;
 		console.log(e.target.textContent.length)
@@ -42,7 +54,19 @@ class App extends Component {
 	}
 
 	savePost() {
-
+		window.fetch(`${remoteUrl}/api/post`, {
+			method: 'POST',
+			mode: 'cors',
+			headers: { 'Content-type': 'application/json'},
+			body: JSON.stringify({
+				title: this.state.title,
+				content: this.state.editorState,
+			}).then(res => {
+				if (res.status > 300) {
+					throw new Error();
+				}
+			}).catch(err => console.error(err));
+		});
 	}
 
 	discardPost() {
@@ -58,6 +82,7 @@ class App extends Component {
 					data-placeholder="Title"
 					contentEditable
 					onKeyDown={keyDown}
+					onBlur={event => this.updateTitle(event)}
 					suppressContentEditableWarning
 				/>
 				<div className={style.editor}>
