@@ -1,0 +1,38 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
+  },
+  "author": "changhc",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.2.2",
+    "babel-preset-react": "^6.23.0",
+    "css-loader": "^0.28.0",
+    "eslint": "^3.18.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "gh-pages": "^0.12.0",
+    "react-scripts": "^0.9.5",
+    "style-loader": "^0.16.1"
+  },
+  "dependencies": {
+    "draft-convert": "^1.4.6",
+    "medium-draft": "^0.5.2",
+    "prop-types": "^15.5.8",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-scripts": "^0.9.5"
+  }
+}
