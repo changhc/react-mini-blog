@@ -61,16 +61,17 @@ class App extends Component {
 			body: JSON.stringify({
 				title: this.state.title,
 				content: this.state.editorState,
-			}).then(res => {
-				if (res.status > 300) {
-					throw new Error();
-				}
-			}).catch(err => console.error(err));
-		});
+			})
+		}).then(res => {
+			if (res.status > 300) {
+				throw new Error();
+			}
+			window.location.replace(`${remoteUrl}`);
+		}).catch(err => console.error(err));
 	}
 
 	discardPost() {
-
+		window.location.replace(`${remoteUrl}`);
 	}
 
 	render() {
