@@ -1,14 +1,17 @@
 body {
 	font-family: "San Francisco", "Roboto", "Segoe UI";
 }
+
 [contenteditable=true]:empty:before{
   content: attr(data-placeholder);
   display: block; /* For Firefox */
 }
 
-h1[contenteditable=true] {
+div.title[contenteditable=true] {
   padding: 5px;
   margin: 0 5px;
+  font-size: 32px;
+  font-weight: bold;
 }
 
 .button {
