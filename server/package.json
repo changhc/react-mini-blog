@@ -7,5 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "changhc",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "knex": "^0.13.0",
+    "pg": "^6.2.3",
+    "body-parser": "^1.17.1",
+    "crypto": "0.0.3",
+    "express": "^4.15.2"
+  }
 }

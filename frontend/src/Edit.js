@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Editor, createEditorState } from 'medium-draft';
+import { convertToRaw } from 'draft-js';
 import mediumDraftExporter from 'medium-draft/lib/exporter';
 import 'medium-draft/lib/index.css';
-import style from './Edit.css';
+import style from './style/Edit.css';
+import remoteUrl from './settings';
 
 const keyDown = (event) => {
   const e = event;
@@ -11,8 +13,6 @@ const keyDown = (event) => {
     e.target.blur();
   }
 };
-
-const remoteUrl = 'http://localhost:5000';
 
 class Edit extends Component {
   constructor({ match }) {
@@ -33,7 +33,6 @@ class Edit extends Component {
   }
 
   onChange(state) {
-    // console.log(convertToRaw(state.getCurrentContent()));
     this.setState({
       editorState: state,
     });
@@ -53,25 +52,29 @@ class Edit extends Component {
   }
 
   savePost() {
+    const renderedHTML = mediumDraftExporter(this.state.editorState.getCurrentContent());
+    const rawContentJson = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+
     window.fetch(`${remoteUrl}/api/post`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
+        postId: this.state.postId,
         title: this.state.title,
-        createTime: Date.now(),
-        content: this.state.editorState,
+        content: renderedHTML,
+        rawContent: rawContentJson,
       }),
     }).then((res) => {
       if (res.status > 300) {
         throw new Error();
       }
-      window.location.replace(`${remoteUrl}`);
+      window.location.replace('/');
     }).catch(err => console.error(err));
   }
 
   discardPost() {
-    window.location.replace(`${remoteUrl}`);
+    window.location.replace('/');
   }
 
   render() {

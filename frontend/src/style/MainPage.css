@@ -1,0 +1,16 @@
+body {
+    font-family: "San Francisco", "Roboto", "Segoe UI";
+}
+
+.buttonLeft {
+    position: absolute;
+}
+
+.buttonRight {
+    position: absolute;
+    float: right;
+}
+
+.buttons {
+    position: relative;
+}
