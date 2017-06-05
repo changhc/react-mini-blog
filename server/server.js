@@ -31,7 +31,7 @@ server.post('/api/post', (req, res) => {
   if (req.body.postId === undefined) {
     console.log('new post');
     const postId = crypto.randomBytes(20).toString('hex');
-    knex.insert({
+    knex('posts').insert({
       id: postId,
       create_time: Date.now(),
       title: req.body.title,
@@ -39,19 +39,18 @@ server.post('/api/post', (req, res) => {
       raw_content: req.body.rawContent,
     }).then((result) => {
       console.log(result);
+      res.sendStatus(200);
     }).catch(err => console.error(err));
   } else {
     console.log('haha');
   }
-  res.sendStatus(200);
 });
 
 server.get('/api/post/:pageNo', (req, res) => {
-  console.log(req.params.pageNo);
-  knex.select('title', 'create_time').from('test').where('delete_time', 'is', null).limit((req.params.pageNo + 1) * postPerPage).offset(req.params.pageNo * postPerPage)
+  knex.select('id', 'title', 'create_time').from('posts').where('delete_time', 'is', null).limit((req.params.pageNo + 1) * postPerPage).offset(req.params.pageNo * postPerPage)
   .then((result) => {
     console.log(result);
-    res.send(JSON.stringify({}));
+    res.send(JSON.stringify({ posts: result, next: result.length === postPerPage }));
   });
 })
 

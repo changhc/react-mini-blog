@@ -44,10 +44,17 @@ class MainPage extends Component {
       )
       : null;
     return (
-      <div>
-        <h1>ChangHC&apos;s blog</h1>
+      <div className={style.mainPage}>
+        <h1><a href="/">ChangHC&apos;s blog</a></h1>
         <div className={style.posts}>
-          {this.state.posts.map(item => <PostBlock key={item.timestamp} post={item} />)}
+          {this.state.posts.map(item =>
+            <PostBlock
+              key={item.create_time}
+              postId={item.id}
+              timestamp={item.create_time}
+              title={item.title}
+            />,
+          )}
         </div>
         <div className={style.buttons}>
           {newerButton}

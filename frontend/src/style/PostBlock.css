@@ -1,9 +1,20 @@
 .block {
     border: 2px dashed #383;
     border-radius: 2px;
+    margin: 1em 0;
+    padding: 10px;
+}
+
+.title {
+    margin-top: 5px;
+    margin-bottom: 2em;
+    margin-left: 5px;
+    font-size: 28px;
+    font-weight: 600;
 }
 
 .time {
     font-size: 8px;
     color: #CCC;
+    margin: 5px;
 }

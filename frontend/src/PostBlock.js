@@ -4,16 +4,17 @@ import style from './style/PostBlock.css';
 
 const PostBlock = props => (
   <div className={style.block}>
-    <h2 href={`/post/${props.postId}`}>{props.title}</h2>
+    <div className={style.title}><a href={`/post/${props.postId}`}>{props.title}</a></div>
     <div className={style.time}>
-      {new Date(props.timestamp).toLocaleString()}
+      {new Date(parseInt(props.timestamp, 10)).toLocaleString()}
     </div>
   </div>
 );
 
+
 PostBlock.propTypes = {
   title: PropTypes.string.isRequired,
-  timestamp: PropTypes.number.isRequired,
+  timestamp: PropTypes.string.isRequired,
   postId: PropTypes.string.isRequired,
 };
 
