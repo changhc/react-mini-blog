@@ -1,0 +1,29 @@
+.button {
+  height: auto;
+  min-width: 3em;
+  background-color: #EAEAEA;
+  border-radius: 5px;
+  font-weight: 500;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.blogName {
+    margin-top: 1em;
+    margin-bottom: 2em;
+    font-size: 35px;
+}
+
+.main {
+    margin: 2em auto;
+    width: 70%;
+    max-width: 850px;
+}
+
+.newPost {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 10px;
+}

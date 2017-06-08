@@ -4,6 +4,7 @@ import { convertToRaw } from 'draft-js';
 import mediumDraftExporter from 'medium-draft/lib/exporter';
 import 'medium-draft/lib/index.css';
 import style from './style/Edit.css';
+import commonStyle from './style/Common.css';
 import remoteUrl from './settings';
 
 const keyDown = (event) => {
@@ -99,8 +100,8 @@ class Edit extends Component {
           </div>
         </div>
         <div className={style.buttons}>
-          <div className={style.button} onClick={this.discardPost}>Discard</div>
-          <div className={style.button} onClick={this.savePost}>Save</div>
+          <div className={`${commonStyle.button} ${style.button}`} onClick={this.discardPost}>Discard</div>
+          <div className={`${commonStyle.button} ${style.button}`} onClick={this.savePost}>Save</div>
         </div>
       </div>
     );

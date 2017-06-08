@@ -7,12 +7,6 @@ a {
   text-decoration: inherit;
 }
 
-.mainPage {
-    margin: 2em auto;
-    width: 70%;
-    max-width: 850px;
-}
-
 .buttonLeft {
     position: absolute;
 }

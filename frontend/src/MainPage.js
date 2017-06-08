@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import BlogHeader from './BlogHeader';
 import PostBlock from './PostBlock';
 import remoteUrl from './settings';
 import style from './style/MainPage.css';
+import commonStyle from './style/Common.css';
 
 class MainPage extends Component {
   constructor({ match }) {
@@ -14,7 +17,7 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    window.fetch(`${remoteUrl}/api/post/${this.state.pageNo}`, {
+    window.fetch(`${remoteUrl}/api/page/${this.state.pageNo}`, {
       method: 'GET',
       mode: 'cors',
       headers: { Accept: 'application/json' },
@@ -44,8 +47,8 @@ class MainPage extends Component {
       )
       : null;
     return (
-      <div className={style.mainPage}>
-        <h1><a href="/">ChangHC&apos;s blog</a></h1>
+      <div className={commonStyle.main}>
+        <BlogHeader newPost={() => this.props.history.replace('/new-post')} />
         <div className={style.posts}>
           {this.state.posts.map(item =>
             <PostBlock
@@ -65,8 +68,8 @@ class MainPage extends Component {
   }
 }
 
-MainPage.propTypes = {
-
+MainPage.PropTypes = {
+  history: PropTypes.shape(Route.history).isRequired,
 };
 
 export default MainPage;
