@@ -5,7 +5,32 @@
 }
 
 .title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 1em;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.content {
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.smallButton {
+  height: auto;
+  min-width: 3em;
+  background-color: #EAEAEA;
+  border-radius: 5px;
+  font-weight: 500;
+  text-align: center;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 10px;
+  margin: 5px;
+  display: inline-block;
+}
+
+.buttons {
+  right: 0;
+  position: absolute;
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Editor, createEditorState } from 'medium-draft';
-import { convertToRaw } from 'draft-js';
+import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
 import mediumDraftExporter from 'medium-draft/lib/exporter';
 import 'medium-draft/lib/index.css';
 import style from './style/Edit.css';
@@ -19,7 +19,6 @@ class Edit extends Component {
   constructor({ match }) {
     super();
     this.state = {
-      title: 'New Post',
       editorState: createEditorState(),
       postId: match.params.postId,
     };
@@ -27,16 +26,37 @@ class Edit extends Component {
     this.savePost = this.savePost.bind(this);
     this.discardPost = this.discardPost.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
+    this.fetchPostContent = this.fetchPostContent.bind(this);
   }
 
   componentDidMount() {
     this.editor.focus();
+    if (this.state.postId !== undefined) {
+      console.log('mount');
+      this.fetchPostContent();
+    }
   }
 
   onChange(state) {
     this.setState({
       editorState: state,
     });
+  }
+
+  fetchPostContent() {
+    window.fetch(`${remoteUrl}/api/raw-post/${this.state.postId}`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: { Accept: 'application/json' },
+    }).then((res) => {
+      if (res.status > 299) {
+        throw new Error();
+      }
+      return res.json();
+    }).then((body) => {
+      const newEditor = EditorState.push(this.state.editorState, convertFromRaw(JSON.parse(body.raw_content)));
+      this.setState({ editorState: newEditor, title: body.title });
+    }).catch(err => console.error(err));
   }
 
   updateTitle(event) {
@@ -62,7 +82,7 @@ class Edit extends Component {
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
         postId: this.state.postId,
-        title: this.state.title,
+        title: this.state.title === '' ? 'New Post' : this.state.title,
         content: renderedHTML,
         rawContent: rawContentJson,
       }),
@@ -79,9 +99,10 @@ class Edit extends Component {
   }
 
   render() {
+    const status = this.state.postId ? 'Editing post' : 'Creating a new post...';
     return (
       <div className={style.main}>
-        <p>Creating a new post...</p>
+        <p>{status}</p>
         <div
           className={style.title}
           data-placeholder="Title"
@@ -89,7 +110,7 @@ class Edit extends Component {
           onKeyDown={keyDown}
           onBlur={event => this.updateTitle(event)}
           suppressContentEditableWarning
-        />
+        >{this.state.title}</div>
         <div className={style.editor}>
           <div className={style.editorInner}>
             <Editor
