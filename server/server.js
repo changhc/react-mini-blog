@@ -46,16 +46,19 @@ server.post('/api/post', (req, res) => {
   if (req.body.postId === undefined) {
     console.log('new post');
     const postId = crypto.randomBytes(20).toString('hex');
-    knex('posts').insert({
-      id: postId,
-      create_time: Date.now(),
-      title: req.body.title,
-      content: req.body.content,
-      raw_content: req.body.rawContent,
-    }).then((result) => {
-      console.log(result);
-      res.sendStatus(200);
-    }).catch(err => console.error(err));
+    knex('posts')
+      .insert({
+        id: postId,
+        create_time: Date.now(),
+        title: req.body.title,
+        content: req.body.content,
+        raw_content: req.body.rawContent,
+      })
+      .then((result) => {
+        console.log(result);
+        res.sendStatus(200);
+      })
+      .catch(err => console.error(err));
     /*
     let escapedContent = '';
     escapeChar(req.body.content)
@@ -80,26 +83,73 @@ server.post('/api/post', (req, res) => {
     */
   } else {
     console.log('haha');
+    knex('posts')
+      .update({
+        update_time: Date.now(),
+        title: req.body.title,
+        content: req.body.content,
+        raw_content: req.body.rawContent,
+      })
+      .where('id', '=', req.body.postId)
+      .then((result) => {
+        console.log(result);
+        res.sendStatus(200);
+      })
+      .catch(err => console.error(err));
   }
 });
 
-server.get('/api/page/:pageNo', (req, res) => {
-  knex.select('id', 'title', 'create_time').from('posts').where('delete_time', 'is', null).orderBy('create_time', 'desc').limit((req.params.pageNo + 1) * postPerPage).offset(req.params.pageNo * postPerPage)
-  .then((result) => {
-    console.log(result);
-    res.send(JSON.stringify({ posts: result, next: result.length === postPerPage }));
-  });
-});
+server.get('/api/page/:pageNo', (req, res) => 
+  knex
+    .select('id', 'title', 'create_time')
+    .from('posts')
+    .where('delete_time', 'is', null)
+    .orderBy('create_time', 'desc')
+    .limit((req.params.pageNo + 1) * postPerPage)
+    .offset(req.params.pageNo * postPerPage)
+    .then((result) => {
+      console.log(result);
+      res.send(JSON.stringify({ posts: result, next: result.length === postPerPage }));
+    })
+);
 
-server.get('/api/post/:postId', (req, res) => {     // single post
-  knex.select('title', 'create_time', 'content').from('posts').where('id', '=', req.params.postId)
-  .then((result) => {
-    if (result.length === 0) {
-      res.sendStatus(404);
-      return;
-    }
-    res.status(200).send(result[0]);
-  });
+server.get('/api/post/:postId', (req, res) =>      // single post
+  knex
+    .select('title', 'create_time', 'content')
+    .from('posts')
+    .where('id', '=', req.params.postId)
+    .then((result) => {
+      if (result.length === 0) {
+        res.sendStatus(404);
+        return;
+      }
+      res.status(200).send(result[0]);
+    })
+);
+
+server.get('/api/raw-post/:postId', (req, res) => 
+  knex.select('title', 'raw_content').from('posts').where('id', '=', req.params.postId)
+    .then((result) => {
+      console.log(result)
+      if (result.length === 0) {
+        res.sendStatus(404);
+        return;
+      }
+      res.status(200).send(result[0]);
+    })
+);
+
+server.post('/api/delete', (req, res) => {
+  knex('posts')
+    .update({
+      delete_time: Date.now(),
+    })
+    .where('id', '=', req.body.postId)
+    .then((result) => {
+      console.log(result);
+      res.sendStatus(200);
+    })
+    .catch(err => console.error(err));
 });
 
 
