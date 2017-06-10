@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { Editor, createEditorState } from 'medium-draft';
 import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
 import mediumDraftExporter from 'medium-draft/lib/exporter';
 import 'medium-draft/lib/index.css';
 import style from './style/Edit.css';
 import commonStyle from './style/Common.css';
-import remoteUrl from './settings';
 
 const keyDown = (event) => {
   const e = event;
@@ -32,7 +33,6 @@ class Edit extends Component {
   componentDidMount() {
     this.editor.focus();
     if (this.state.postId !== undefined) {
-      console.log('mount');
       this.fetchPostContent();
     }
   }
@@ -44,7 +44,7 @@ class Edit extends Component {
   }
 
   fetchPostContent() {
-    window.fetch(`${remoteUrl}/api/raw-post/${this.state.postId}`, {
+    window.fetch(`/api/raw-post/${this.state.postId}`, {
       method: 'GET',
       mode: 'cors',
       headers: { Accept: 'application/json' },
@@ -75,14 +75,13 @@ class Edit extends Component {
   savePost() {
     const renderedHTML = mediumDraftExporter(this.state.editorState.getCurrentContent());
     const rawContentJson = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
-
-    window.fetch(`${remoteUrl}/api/post`, {
+    window.fetch('/api/post', {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
         postId: this.state.postId,
-        title: this.state.title === '' ? 'New Post' : this.state.title,
+        title: this.state.title === undefined ? 'New Post' : this.state.title,
         content: renderedHTML,
         rawContent: rawContentJson,
       }),
@@ -90,12 +89,12 @@ class Edit extends Component {
       if (res.status > 300) {
         throw new Error();
       }
-      window.location.replace('/');
+      this.props.history.replace('/');
     }).catch(err => console.error(err));
   }
 
   discardPost() {
-    window.location.replace('/');
+    this.props.history.replace('/');
   }
 
   render() {
@@ -128,5 +127,9 @@ class Edit extends Component {
     );
   }
 }
+
+Edit.propTypes = {
+  history: PropTypes.shape(Route.history).isRequired,
+};
 
 export default Edit;

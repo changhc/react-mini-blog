@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import 'medium-draft/lib/basic.css';
 import BlogHeader from './BlogHeader';
 import TimeBlock from './TimeBlock';
 import style from './style/Post.css';
 import commonStyle from './style/Common.css';
-import remoteUrl from './settings';
 
 class Post extends Component {
   constructor({ match }) {
@@ -18,7 +18,7 @@ class Post extends Component {
   }
 
   componentDidMount() {
-    window.fetch(`${remoteUrl}/api/post/${this.state.postId}`, {
+    window.fetch(`/api/post/${this.state.postId}`, {
       method: 'GET',
       mode: 'cors',
       headers: { Accept: 'application/json' },
@@ -37,7 +37,7 @@ class Post extends Component {
   }
 
   deletePost() {
-    window.fetch(`${remoteUrl}/api/delete`, {
+    window.fetch('/api/delete', {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },

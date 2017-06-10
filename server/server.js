@@ -1,3 +1,4 @@
+require('dotenv').load();
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
@@ -5,11 +6,11 @@ const pg = require('pg');
 const knex = require('knex')({
   client: 'pg',
   connection: {
-    host: '127.0.0.1',
-    post: 5432,
-    user: 'postgres',
-    password: 'a1b2c3d4',
-    database: 'test'
+    host: process.env.DB_HOST,
+    post: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PW,
+    database: process.env.DB_NAME,
   }
 });
 
@@ -44,7 +45,6 @@ server.use((req, res, next) => {
 
 server.post('/api/post', (req, res) => {
   if (req.body.postId === undefined) {
-    console.log('new post');
     const postId = crypto.randomBytes(20).toString('hex');
     knex('posts')
       .insert({
@@ -55,7 +55,6 @@ server.post('/api/post', (req, res) => {
         raw_content: req.body.rawContent,
       })
       .then((result) => {
-        console.log(result);
         res.sendStatus(200);
       })
       .catch(err => console.error(err));
@@ -82,7 +81,6 @@ server.post('/api/post', (req, res) => {
     });
     */
   } else {
-    console.log('haha');
     knex('posts')
       .update({
         update_time: Date.now(),
@@ -92,7 +90,6 @@ server.post('/api/post', (req, res) => {
       })
       .where('id', '=', req.body.postId)
       .then((result) => {
-        console.log(result);
         res.sendStatus(200);
       })
       .catch(err => console.error(err));
@@ -108,7 +105,6 @@ server.get('/api/page/:pageNo', (req, res) =>
     .limit((req.params.pageNo + 1) * postPerPage)
     .offset(req.params.pageNo * postPerPage)
     .then((result) => {
-      console.log(result);
       res.send(JSON.stringify({ posts: result, next: result.length === postPerPage }));
     })
 );
@@ -130,7 +126,6 @@ server.get('/api/post/:postId', (req, res) =>      // single post
 server.get('/api/raw-post/:postId', (req, res) => 
   knex.select('title', 'raw_content').from('posts').where('id', '=', req.params.postId)
     .then((result) => {
-      console.log(result)
       if (result.length === 0) {
         res.sendStatus(404);
         return;
@@ -146,10 +141,13 @@ server.post('/api/delete', (req, res) => {
     })
     .where('id', '=', req.body.postId)
     .then((result) => {
-      console.log(result);
       res.sendStatus(200);
     })
     .catch(err => console.error(err));
+});
+
+server.get('*', function (req, res) {
+  res.sendfile('./public/index.html');
 });
 
 

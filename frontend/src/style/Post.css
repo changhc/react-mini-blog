@@ -16,6 +16,13 @@
   overflow-wrap: break-word;
 }
 
+.content p,
+.content li,
+.content ol,
+.content ul {
+  font-family: medium-content-serif-font,Georgia,Cambria,"Times New Roman",Times,serif;
+}
+
 .smallButton {
   height: auto;
   min-width: 3em;

@@ -3,7 +3,6 @@ import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import BlogHeader from './BlogHeader';
 import PostBlock from './PostBlock';
-import remoteUrl from './settings';
 import style from './style/MainPage.css';
 import commonStyle from './style/Common.css';
 
@@ -17,7 +16,7 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    window.fetch(`${remoteUrl}/api/page/${this.state.pageNo}`, {
+    window.fetch(`/api/page/${this.state.pageNo}`, {
       method: 'GET',
       mode: 'cors',
       headers: { Accept: 'application/json' },
@@ -68,7 +67,7 @@ class MainPage extends Component {
   }
 }
 
-MainPage.PropTypes = {
+MainPage.propTypes = {
   history: PropTypes.shape(Route.history).isRequired,
 };
 
